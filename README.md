@@ -61,11 +61,50 @@ const contract = getContract({
 const totalSupply = await contract.read.totalSupply();
 const name = await contract.read.name();
 const symbol = await contract.read.symbol();
+const balanceOf = await contract.read.balanceOf([
+  "0x750d349A93867Ab6EcD8a9000ae97Bb5022BB2e2",
+]);
 console.log("totalSupply", totalSupply);
 console.log("name", name);
 console.log("symbol", symbol);
+console.log("balanceOf", balanceOf);
+/**********************************************/
+const balanceOf2 = await publicClient.readContract({
+  address: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+  abi: TetherABI,
+  functionName: "balanceOf",
+  args: ["0x750d349A93867Ab6EcD8a9000ae97Bb5022BB2e2"],
+});
+console.log("balanceOf2", balanceOf2);
 ```
 
 #### 쓰기 (Write)
+
+```js
+const account = privateKeyToAccount(
+  "0xb0b6d8fcad7cc5c0cff6b09125de76e30a2c383943777afa89d7ff969a1f8fdb"
+); // 비밀키
+console.log("account", account);
+
+const walletClient = createWalletClient({
+  account,
+  chain: sepolia,
+  transport: http(
+    `https://sepolia.infura.io/v3/82013146fcde45569341bd065b6d945d`
+  ),
+}).extend(publicActions);
+
+const { request } = await walletClient.simulateContract({
+  address: "0x4EA137C740d4B0BFB8426B6836d1Cc60D8A4aBfB",
+  abi: TestABI,
+  functionName: "store",
+  args: [100],
+  account,
+});
+
+const hash = await walletClient.writeContract(request);
+
+console.log(hash);
+```
 
 #### 로그 (Event)
