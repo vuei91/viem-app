@@ -114,7 +114,6 @@ const writeContract2 = async () => {
 };
 
 const eventContract = async () => {
-  console.log("eventContract");
   const blockNumber = await publicClient.getBlockNumber();
   const logs = await publicClient.getContractEvents({
     address: "0xFd59f3889524DbeEEB07233a9eDe612fFAE78cE9",

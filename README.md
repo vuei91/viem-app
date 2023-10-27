@@ -119,3 +119,21 @@ console.log(hash);
 ```
 
 #### 로그 (Event)
+
+```js
+const blockNumber = await publicClient.getBlockNumber();
+const logs = await publicClient.getContractEvents({
+  address: "0xFd59f3889524DbeEEB07233a9eDe612fFAE78cE9",
+  abi: VTokenABI,
+  eventName: "Transfer",
+  fromBlock: blockNumber - 10000n,
+  toBlock: "latest",
+});
+console.log(logs);
+const unwatch = publicClient.watchContractEvent({
+  address: "0xFd59f3889524DbeEEB07233a9eDe612fFAE78cE9",
+  abi: VTokenABI,
+  onLogs: (logs) => console.log(logs),
+});
+unwatch(); // watch 종료 또는 listening 종료
+```
