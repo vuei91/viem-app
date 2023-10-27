@@ -95,7 +95,7 @@ console.log("balanceOf2", balanceOf2);
 #### 쓰기 (Write)
 
 ```js
-const { request } = await walletClient.simulateContract({
+const { request } = await publicClient.simulateContract({
   address: "0x4EA137C740d4B0BFB8426B6836d1Cc60D8A4aBfB",
   abi: TestABI,
   functionName: "store",
