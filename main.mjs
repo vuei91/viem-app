@@ -86,7 +86,6 @@ const writeContract = async () => {
   const account = privateKeyToAccount(
     "0xb0b6d8fcad7cc5c0cff6b09125de76e30a2c383943777afa89d7ff969a1f8fdb"
   ); // 비밀키
-  console.log("account", account);
 
   const walletClient = createWalletClient({
     account,
@@ -101,13 +100,13 @@ const writeContract = async () => {
     abi: TestABI,
     functionName: "store",
     args: [100],
-    account,
   });
 
   const hash = await walletClient.writeContract(request);
 
   console.log(hash);
 };
+
 const eventContract = async () => {};
 
 main();

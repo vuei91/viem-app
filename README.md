@@ -87,7 +87,7 @@ const account = privateKeyToAccount(
 console.log("account", account);
 
 const walletClient = createWalletClient({
-  account,
+  account, // 모든 곳에 같은 account를 적용할 경우 여기에 표시
   chain: sepolia,
   transport: http(
     `https://sepolia.infura.io/v3/82013146fcde45569341bd065b6d945d`
@@ -99,7 +99,7 @@ const { request } = await walletClient.simulateContract({
   abi: TestABI,
   functionName: "store",
   args: [100],
-  account,
+  account, // contract마다 account 다르게 적용 할 경우 여기에 표시
 });
 
 const hash = await walletClient.writeContract(request);
