@@ -8,6 +8,7 @@ import { mainnet, sepolia } from "viem/chains";
 import TetherABI from "./abi/TetherABI.mjs";
 import { privateKeyToAccount } from "viem/accounts";
 import TestABI from "./abi/TestABI.mjs";
+import VTokenABI from "./abi/VTokenABI.mjs";
 
 const account = privateKeyToAccount(
   "0xb0b6d8fcad7cc5c0cff6b09125de76e30a2c383943777afa89d7ff969a1f8fdb"
@@ -15,7 +16,7 @@ const account = privateKeyToAccount(
 
 // contract Read
 const publicClient = createPublicClient({
-  chain: mainnet,
+  chain: sepolia,
   transport: http(),
 });
 
@@ -112,12 +113,29 @@ const writeContract2 = async () => {
   console.log(hash);
 };
 
-const eventContract = async () => {};
+const eventContract = async () => {
+  console.log("eventContract");
+  const blockNumber = await publicClient.getBlockNumber();
+  const logs = await publicClient.getContractEvents({
+    address: "0xFd59f3889524DbeEEB07233a9eDe612fFAE78cE9",
+    abi: VTokenABI,
+    eventName: "Transfer",
+    fromBlock: blockNumber - 10000n,
+    toBlock: "latest",
+  });
+  console.log(logs);
+  const unwatch = publicClient.watchContractEvent({
+    address: "0xFd59f3889524DbeEEB07233a9eDe612fFAE78cE9",
+    abi: VTokenABI,
+    onLogs: (logs) => console.log(logs),
+  });
+  unwatch(); // watch 종료 또는 listening 종료
+};
 
 const main = async () => {
   // readContract();
-  writeContract2();
-  // eventContract();
+  // writeContract2();
+  eventContract();
 };
 
 main();
