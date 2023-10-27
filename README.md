@@ -5,9 +5,23 @@
 ### 설정 (Setup) & 연결 (Connect)
 
 ```js
+const account = privateKeyToAccount(
+  "0xb0b6d8fcad7cc5c0cff6b09125de76e30a2c383943777afa89d7ff969a1f8fdb"
+); // 비밀키
+
+// Read 연관
 const publicClient = createPublicClient({
   chain: mainnet,
   transport: http(),
+});
+
+// Write 연관
+const walletClient = createWalletClient({
+  account,
+  chain: sepolia,
+  transport: http(
+    `https://sepolia.infura.io/v3/82013146fcde45569341bd065b6d945d`
+  ),
 });
 ```
 
