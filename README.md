@@ -52,6 +52,20 @@ console.log("chainId", chainId);
 
 #### 읽기 (Read)
 
+```js
+const contract = getContract({
+  address: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+  abi: TetherABI,
+  publicClient,
+});
+const totalSupply = await contract.read.totalSupply();
+const name = await contract.read.name();
+const symbol = await contract.read.symbol();
+console.log("totalSupply", totalSupply);
+console.log("name", name);
+console.log("symbol", symbol);
+```
+
 #### 쓰기 (Write)
 
 #### 로그 (Event)
