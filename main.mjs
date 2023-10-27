@@ -3,23 +3,30 @@ import {
   createWalletClient,
   getContract,
   http,
-  publicActions,
 } from "viem";
 import { mainnet, sepolia } from "viem/chains";
 import TetherABI from "./abi/TetherABI.mjs";
 import { privateKeyToAccount } from "viem/accounts";
 import TestABI from "./abi/TestABI.mjs";
 
+const account = privateKeyToAccount(
+  "0xb0b6d8fcad7cc5c0cff6b09125de76e30a2c383943777afa89d7ff969a1f8fdb"
+); // 비밀키
+
+// contract Read
 const publicClient = createPublicClient({
   chain: mainnet,
   transport: http(),
 });
 
-const main = async () => {
-  // readContract();
-  writeContract();
-  // eventContract();
-};
+// contract Write
+const walletClient = createWalletClient({
+  account,
+  chain: sepolia,
+  transport: http(
+    `https://sepolia.infura.io/v3/82013146fcde45569341bd065b6d945d`
+  ),
+});
 
 const getBlockInformation = async () => {
   const balance = await publicClient.getBalance({
@@ -60,7 +67,7 @@ const readContract = async () => {
   const contract = getContract({
     address: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
     abi: TetherABI,
-    publicClient,
+    publicClient, // read
   });
   const totalSupply = await contract.read.totalSupply();
   const name = await contract.read.name();
@@ -83,19 +90,7 @@ const readContract = async () => {
 };
 
 const writeContract = async () => {
-  const account = privateKeyToAccount(
-    "0xb0b6d8fcad7cc5c0cff6b09125de76e30a2c383943777afa89d7ff969a1f8fdb"
-  ); // 비밀키
-
-  const walletClient = createWalletClient({
-    account,
-    chain: sepolia,
-    transport: http(
-      `https://sepolia.infura.io/v3/82013146fcde45569341bd065b6d945d`
-    ),
-  }).extend(publicActions);
-
-  const { request } = await walletClient.simulateContract({
+  const { request } = await publicClient.simulateContract({
     address: "0x4EA137C740d4B0BFB8426B6836d1Cc60D8A4aBfB",
     abi: TestABI,
     functionName: "store",
@@ -107,6 +102,22 @@ const writeContract = async () => {
   console.log(hash);
 };
 
+const writeContract2 = async () => {
+  const contract = getContract({
+    address: "0x4EA137C740d4B0BFB8426B6836d1Cc60D8A4aBfB",
+    abi: TestABI,
+    walletClient,
+  });
+  const hash = await contract.write.store([871]);
+  console.log(hash);
+};
+
 const eventContract = async () => {};
+
+const main = async () => {
+  // readContract();
+  writeContract2();
+  // eventContract();
+};
 
 main();
