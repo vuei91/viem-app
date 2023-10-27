@@ -11,7 +11,7 @@ const account = privateKeyToAccount(
 
 // Read 연관
 const publicClient = createPublicClient({
-  chain: mainnet,
+  chain: sepolia,
   transport: http(),
 });
 
@@ -22,6 +22,14 @@ const walletClient = createWalletClient({
   transport: http(
     `https://sepolia.infura.io/v3/82013146fcde45569341bd065b6d945d`
   ),
+});
+
+const walletClient = createWalletClient({
+  chain: sepolia,
+  // browser 설치된 지갑과 연결을 진행
+  transport: custom(window.ethereum),
+  // browser 설치된 지갑의 계정으로 넣어주어야 함
+  account: accounts[0],
 });
 ```
 
