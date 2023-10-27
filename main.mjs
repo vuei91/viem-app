@@ -1,5 +1,6 @@
-import { createPublicClient, http } from "viem";
+import { createPublicClient, getContract, http } from "viem";
 import { mainnet } from "viem/chains";
+import TetherABI from "./abi/TetherABI.mjs";
 
 const publicClient = createPublicClient({
   chain: mainnet,
@@ -7,16 +8,18 @@ const publicClient = createPublicClient({
 });
 
 const main = async () => {
-  getBlockInformation();
+  readContract();
+  writeContract();
+  eventContract();
 };
 
 const getBlockInformation = async () => {
   const balance = await publicClient.getBalance({
-    address: "0xA0Cf798816D4b9b9866b5330EEa46a18382f251e",
+    address: "0xCBb6CFABaf5ce8c97696aAb06C2DC6d96eAcd2ab",
   });
 
   const transactionCount = await publicClient.getTransactionCount({
-    address: "0xA0Cf798816D4b9b9866b5330EEa46a18382f251e",
+    address: "0xCBb6CFABaf5ce8c97696aAb06C2DC6d96eAcd2ab",
   });
 
   const block = await publicClient.getBlock();
@@ -40,9 +43,26 @@ const getBlockInformation = async () => {
   console.log("block", block);
   console.log("blockNumber", blockNumber);
   console.log("count", count);
-  console.log("unwatchBlockNumber", unwatchBlockNumber);
-  console.log("unwatchBlocks", unwatchBlocks);
+  console.log("unwatchBlockNumber", unwatchBlockNumber());
+  console.log("unwatchBlocks", unwatchBlocks());
   console.log("chainId", chainId);
 };
+
+const readContract = async () => {
+  const contract = getContract({
+    address: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+    abi: TetherABI,
+    publicClient,
+  });
+  const totalSupply = await contract.read.totalSupply();
+  const name = await contract.read.name();
+  const symbol = await contract.read.symbol();
+  console.log("totalSupply", totalSupply);
+  console.log("name", name);
+  console.log("symbol", symbol);
+};
+
+const writeContract = async () => {};
+const eventContract = async () => {};
 
 main();
