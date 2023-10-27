@@ -6,7 +6,9 @@ const publicClient = createPublicClient({
   transport: http(),
 });
 
-const main = async () => {};
+const main = async () => {
+  getBlockInformation();
+};
 
 const getBlockInformation = async () => {
   const balance = await publicClient.getBalance({
